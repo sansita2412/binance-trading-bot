@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Trading Interface - Binance Bot{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Trading Form -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-chart-line me-2"></i>Place Order
+                    <span class="status-indicator status-online" title="Bot Online"></span>
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Quick Order Buttons -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <button class="btn btn-success quick-order-btn w-100" data-side="BUY">
+                            <i class="fas fa-arrow-up me-2"></i>Quick Buy
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button class="btn btn-danger quick-order-btn w-100" data-side="SELL">
+                            <i class="fas fa-arrow-down me-2"></i>Quick Sell
+                        </button>
+                    </div>
+                </div>
+
+                <form id="orderForm" class="order-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="symbol">Symbol</label>
+                                <input type="text" class="form-control" id="symbol" name="symbol" 
+                                       placeholder="e.g., BTCUSDT" required>
+                                <small class="form-text text-muted">Enter trading pair symbol</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="side">Side</label>
+                                <select class="form-select" id="side" name="side" required>
+                                    <option value="">Select Side</option>
+                                    <option value="BUY">Buy</option>
+                                    <option value="SELL">Sell</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="order_type">Order Type</label>
+                                <select class="form-select" id="order_type" name="order_type" required>
+                                    <option value="MARKET">Market Order</option>
+                                    <option value="LIMIT">Limit Order</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="quantity">Quantity</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity" 
+                                       step="0.000001" placeholder="0.001" required>
+                                <div class="mt-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary percentage-btn" data-percentage="25">25%</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary percentage-btn" data-percentage="50">50%</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary percentage-btn" data-percentage="75">75%</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary percentage-btn" data-percentage="100">100%</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row" id="priceGroup" style="display: none;">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <label for="price">Price (USDT)</label>
+                                <input type="number" class="form-control" id="price" name="price" 
+                                       step="0.00000001" placeholder="45230.50">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Price Helpers</label>
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-info price-helper" data-helper="market">Market</button>
+                                <button type="button" class="btn btn-sm btn-outline-success price-helper" data-helper="above">+1%</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger price-helper" data-helper="below">-1%</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-paper-plane me-2"></i>Place Order
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Order Result Display -->
+                <div id="orderResult" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Info -->
+    <div class="col-lg-4">
+        <!-- Symbol Information -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Symbol Info
+                </h6>
+            </div>
+            <div class="card-body" id="symbolInfo">
+                <p class="text-muted">Select a symbol to view details</p>
+            </div>
+        </div>
+
+        <!-- Balance Information -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-wallet me-2"></i>Balance
+                </h6>
+            </div>
+            <div class="card-body" id="balance">
+                <div class="text-center">
+                    <div class="loading"></div>
+                    <p class="mt-2 text-muted">Loading balance...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Management -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-shield-alt me-2"></i>Risk Management
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="stopLoss">Stop Loss (%)</label>
+                    <input type="number" class="form-control form-control-sm" id="stopLoss" 
+                           placeholder="2.0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="takeProfit">Take Profit (%)</label>
+                    <input type="number" class="form-control form-control-sm" id="takeProfit" 
+                           placeholder="5.0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="riskPercentage">Risk per Trade (%)</label>
+                    <input type="number" class="form-control form-control-sm" id="riskPercentage" 
+                           placeholder="1.0" step="0.1" max="5">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order History -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2"></i>Recent Orders
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="orderHistory">
+                    <div class="text-center py-4">
+                        <div class="loading"></div>
+                        <p class="mt-2 text-muted">Loading order history...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/trading.js') }}"></script>
+{% endblock %}

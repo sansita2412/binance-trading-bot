@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Bot Setup - Binance Bot{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-cog me-2"></i>Bot Configuration
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="setupForm">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Security Notice:</strong> Your API credentials are used only for this session and are not permanently stored.
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="api_key" class="form-label">
+                            <i class="fas fa-key me-1"></i>API Key
+                        </label>
+                        <input type="text" class="form-control" id="api_key" name="api_key" 
+                               placeholder="Enter your Binance API Key" required>
+                        <div class="form-text">
+                            Get your API key from <a href="https://www.binance.com/en/my/settings/api-management" target="_blank">Binance API Management</a>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="api_secret" class="form-label">
+                            <i class="fas fa-lock me-1"></i>API Secret
+                        </label>
+                        <input type="password" class="form-control" id="api_secret" name="api_secret" 
+                               placeholder="Enter your Binance API Secret" required>
+                        <div class="form-text">
+                            Keep your API secret secure and never share it with anyone
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="testnet" name="testnet" checked>
+                            <label class="form-check-label" for="testnet">
+                                <i class="fas fa-flask me-1"></i>Use Testnet (Recommended for testing)
+                            </label>
+                        </div>
+                        <div class="form-text">
+                            Testnet allows you to test trading without real money. Uncheck only when ready for live trading.
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-save me-2"></i>Save Configuration
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-outline-secondary w-100" onclick="testConnection()">
+                                <i class="fas fa-plug me-2"></i>Test Connection
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- API Permissions Info -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Required API Permissions
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-success">
+                            <i class="fas fa-check me-1"></i>Required Permissions:
+                        </h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-dot-circle me-2 text-success"></i>Enable Reading</li>
+                            <li><i class="fas fa-dot-circle me-2 text-success"></i>Enable Futures</li>
+                            <li><i class="fas fa-dot-circle me-2 text-success"></i>Enable Spot & Margin Trading</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-danger">
+                            <i class="fas fa-times me-1"></i>Not Required:
+                        </h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-times-circle me-2 text-danger"></i>Enable Withdrawals</li>
+                            <li><i class="fas fa-times-circle me-2 text-danger"></i>Unrestricted IP Access</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <strong>Tip:</strong> For security, restrict your API key to specific IP addresses and disable withdrawal permissions.
+                </div>
+            </div>
+        </div>
+
+        <!-- Connection Status -->
+        <div class="card mt-4" id="connectionStatus" style="display: none;">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-wifi me-2"></i>Connection Status
+                </h6>
+            </div>
+            <div class="card-body" id="connectionResult">
+                <!-- Connection test results will appear here -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/setup.js') }}"></script>
+{% endblock %}

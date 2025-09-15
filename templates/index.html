@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">
+                <i class="fas fa-robot text-primary"></i>
+                Binance Trading Bot
+            </h1>
+            <p class="lead text-muted">Professional cryptocurrency trading interface</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-cog fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Setup Bot</h5>
+                        <p class="card-text">Configure your Binance API credentials and trading preferences.</p>
+                        <a href="{{ url_for('setup') }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-right me-1"></i>Configure
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                        <h5 class="card-title">Start Trading</h5>
+                        <p class="card-text">Place buy and sell orders with an intuitive interface.</p>
+                        <a href="{{ url_for('trading') }}" class="btn btn-success">
+                            <i class="fas fa-play me-1"></i>Trade Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-alt fa-3x text-info mb-3"></i>
+                        <h5 class="card-title">View Logs</h5>
+                        <p class="card-text">Monitor your trading activity and system logs.</p>
+                        <a href="{{ url_for('logs') }}" class="btn btn-info">
+                            <i class="fas fa-eye me-1"></i>View Logs
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shield-alt fa-3x text-warning mb-3"></i>
+                        <h5 class="card-title">Security</h5>
+                        <p class="card-text">Your API keys are handled securely and never stored permanently.</p>
+                        <div class="btn btn-outline-warning disabled">
+                            <i class="fas fa-lock me-1"></i>Secured
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 text-center">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Note:</strong> This bot is configured for testnet by default. Switch to mainnet only when you're ready for live trading.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
